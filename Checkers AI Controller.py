@@ -114,8 +114,6 @@ if __name__ == "__main__":
     ais = [
          Ai("Russell", simple_ai),
          Ai("Dark-Russell", alt_simple_ai),
-         Ai("Random 1", random_ai),
-         Ai("Random 2", random_ai),
          Ai("Liam", makeMove)
      ]
 

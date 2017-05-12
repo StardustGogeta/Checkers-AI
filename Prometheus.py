@@ -2,6 +2,8 @@
 #  knowledge to man. He was cast into the bowels of the earth
 #  and pecked by birds.
 
+#from random import choice
+
 start = [[0,1,0,1,0,1,0,1],
          [1,0,1,0,1,0,1,0],
          [0,1,0,1,0,0,0,1],
@@ -20,9 +22,18 @@ alt = [[0,0,0,0,0,0,0,1],
        [0,2,0,2,0,2,0,1],
        [0,0,0,0,0,0,0,0]]
 
-def findOptimalMove(y,x,board,king,dbJump=0,moveList=[],recursion_check=0): # If dbJump == 1, then it must return either a jump or nothing
+ttt = [[0,0,0,0,0,0,0,0],
+       [0,0,2,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0],
+       [0,0,2,0,0,0,0,0],
+       [0,0,0,10,0,0,0,0],
+       [0,0,0,0,0,0,0,0],
+       [0,0,0,2,0,0,0,0],
+       [0,0,0,0,0,0,0,0]]
+
+def findOptimalMove(y,x,board,king,dbJump=0,moveList=[],recursion_check=0): # If dbJump, then it must return either a jump or nothing
     score = 0
-    if recursion_check > 4: return 0
+    if recursion_check > 50: return 0 # Prevent infinite loops
     moveList = [(y,x)] # Start a new sequence
     dirs = [(1,1),(1,-1),(-1,1),(-1,-1)] if king else [(1,1),(1,-1)]
     maxScore = -1
@@ -30,9 +41,10 @@ def findOptimalMove(y,x,board,king,dbJump=0,moveList=[],recursion_check=0): # If
         if y+dy in range(8) and x+dx in range(8):
             if board[y+dy][x+dx]:
                 if y+dy*2 in range(8) and x+dx*2 in range(8) and not board[y+dy*2][x+dx*2] and board[y+dy][x+dx] % 9 == 2:
+                    if (y+dy*2,x+dx*2) == dbJump: return 0
                     score = 1
                     # Jump, and check for another jump
-                    secondMove = findOptimalMove(y+dy*2,x+dx*2,board,king,1,moveList,recursion_check+1) # Check for double-jump
+                    secondMove = findOptimalMove(y+dy*2,x+dx*2,board,king,(y,x),moveList,recursion_check+1) # Check for double-jump
                     if secondMove:
                         score += secondMove[1]
                         if score > maxScore:
@@ -47,8 +59,6 @@ def findOptimalMove(y,x,board,king,dbJump=0,moveList=[],recursion_check=0): # If
                 if score > maxScore:
                     maxScore = score
                     moveList = [(y,x),(y+dy,x+dx)]
-            else:
-                return 0
     return [moveList,maxScore]
     # Returns best move for a piece, and its score
 
@@ -62,7 +72,9 @@ def makeMove(board):
     possibleScores = [x[1] for x in possibleMoves]
     bestIndex = possibleScores.index(max(possibleScores))
     bestMove = possibleMoves[bestIndex]
+    #bestMove = choice([x for x in possibleMoves if x[1] == max(possibleScores)])
+    # For some reason, randomizing between "best options" decreases performance against others.
     formattedBest = [(x,y) for (y,x) in bestMove[0]]
     return formattedBest
 
-print(makeMove(start))
+#print(makeMove(ttt))
