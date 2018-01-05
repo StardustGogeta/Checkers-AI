@@ -76,10 +76,11 @@ def run_game(ai_a, ai_b):
             board = flipped_board(board)
 
             if is_game_won(board):
+                display_board(board)
                 return ai
 
     print("MAX TURNS EXCEEDED")
-    # display_board(board)
+    display_board(board)
 
 
 
@@ -103,7 +104,7 @@ def display_statistics(ais):
 
 
 if __name__ == "__main__":
-
+    from Neptune import selectBestMove
     from Prometheus import makeMove
     from TestAIs import *
     from RussellAI import *
@@ -114,7 +115,8 @@ if __name__ == "__main__":
     ais = [
          Ai("Russell", simple_ai),
          Ai("Dark-Russell", alt_simple_ai),
-         Ai("Liam", makeMove)
+         Ai("Prometheus", makeMove),
+         Ai("Neptune", selectBestMove)
      ]
 
     # ais = [Ai("Russell " + str(x), simple_ai) for x in range(1, 6)]
